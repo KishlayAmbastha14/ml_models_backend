@@ -18,7 +18,7 @@ __main__.DropAndClip = DropAndClip
 # with open('decision_tree.joblib','rb') as f:
 #     model = joblib.load(f)
 
-model = joblib.load("decision_tree.joblib")
+decision_tree = joblib.load("decision_tree.joblib")
 
 app = FastAPI(title="Web Intrusion Detection API")
 
@@ -195,11 +195,8 @@ async def main():
 @app.post("/decision_tree_predict")
 async def decision_tree_model(data:IntrusionRequest):
     data = pd.DataFrame([data.model_dump()])
-    # prediction = model.predict(data)[0]
-    prediction = int(model.predict(data)[0])
-    #  = float(model.predict_proba(data).max())
-    probability = float(model.predict_proba(data).max())
-    # probability = model.predict_proba(data).max()
+    prediction = int(decision_tree.predict(data)[0])
+    probability = float(decision_tree.predict_proba(data).max())
 
     return JSONResponse(
         status_code=200,
@@ -208,6 +205,3 @@ async def decision_tree_model(data:IntrusionRequest):
             "confidence":round(float(probability),4)
          }
     )
-
-# if __name__ == "__main__":
-#     main()
